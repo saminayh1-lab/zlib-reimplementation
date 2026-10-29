@@ -1,0 +1,39 @@
+schema_version = "1.4"
+
+[[artifacts]]
+source = "/app/"
+exclude = [
+    "**/target/**",
+    "**/.git/**",
+    "**/__pycache__/**",
+]
+
+[task]
+name = "fswe-samples/zlib-reimplementation"
+description = "Reimplement deflate, zlib and gzip compression and decompression in dependency-free Rust, bit-exact against zlib on decompression and measured against zlib for ratio and speed on compression."
+keywords = ["rust", "compression", "deflate", "zlib", "gzip", "systems-programming", "reimplementation", "performance"]
+
+[metadata]
+difficulty = "hard"
+category = "systems-compression"
+oracle_reward_threshold = 1.0
+
+[agent]
+timeout_sec = 72000.0
+user = "agent"
+
+[verifier]
+# build (900 s cap) + inflate stage (1200 s soft deadline) + deflate stage (1500 s soft deadline)
+# + speed stage (8 runs, 300 s cap each) stays under this in the worst case the stages allow.
+timeout_sec = 7200.0
+environment_mode = "separate"
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 1800.0
+cpus = 4
+memory_mb = 8192
+storage_mb = 10240
+
+[environment.env]
+TASK_BUDGET_SECS = "72000"
